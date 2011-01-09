@@ -9,28 +9,34 @@ using System.Windows.Forms;
 
 namespace Fogcation
 {
-    public partial class Main : Form
+    public partial class frmMain : Form
     {
+        // the number of hours that counts as a work day
+        internal static int cHoursInAWorkDay = 8;
+        // the default long-form date format
+        internal static string sLongDateFormat = "MMMM d, yyyy";
+
         // the amount of vacation time accrued per pay period
         private static TimeSpan tsVacationTimePerPayPeriod = new TimeSpan(6, 40, 0);
-        // the number of hours that counts as a work day
-        private static int cHoursInAWorkDay = 8;
 
-        public Main()
+        private dlgVacationDay dlgVacationDay = new dlgVacationDay();
+
+        public frmMain()
         {
             InitializeComponent();
-        }
-
-        private void Main_Load(object sender, EventArgs e)
-        {
+            
             dtCurr.Value = DateTime.Now;
             dtFuture.Value = DateTime.Now;
-            UpdateLogColumns();
-        }
+            dlgVacationDay.dt.Value = DateTime.Now;
 
+            lstVacation.ListViewItemSorter = new VacationListViewSorter();
+
+            ResizeControls();
+        }
+        
         private void Main_Resize(object sender, EventArgs e)
         {
-            UpdateLogColumns();
+            ResizeControls();
         }
 
         private void dtFuture_ValueChanged(object sender, EventArgs e)
@@ -48,6 +54,83 @@ namespace Fogcation
             CalculateBalance();
         }
 
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            var dt = dlgVacationDay.dt.Value;
+            dlgVacationDay.Percentage = Percentage.FullDay;
+
+            if (dlgVacationDay.ShowDialog(this) == DialogResult.OK)
+            {
+                AddVacationDay(dlgVacationDay.VacationDay);
+            }
+            else
+            {
+                // don't save the last entered date if they canceled
+                dlgVacationDay.dt.Value = dt;
+            }
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            if (lstVacation.SelectedItems.Count < 1) return;
+
+            var item = lstVacation.SelectedItems[0];
+            var day = item.Tag as VacationDay;
+
+            var result = MessageBox.Show(
+                "Are you sure you want to remove the following vacation day?\n\n" + day,
+                "Remove Vacation Day?",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                item.Remove();
+                lstVacation.Sort();
+            }
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            lstVacation.Items.Clear();
+        }
+
+        private void AddVacationDay(VacationDay day)
+        {
+            // check for dupes!
+            foreach (ListViewItem viewitem in lstVacation.Items)
+            {
+                if ((viewitem.Tag as VacationDay).Dt.Date == day.Dt.Date)
+                {
+                    MessageBox.Show(
+                        "That date has already been added!",
+                        "Cannot add " + day.Dt.ToString(sLongDateFormat),
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation
+                    );
+                    return;
+                }
+            }
+
+            var item = new ListViewItem(
+                new string[] {
+                    day.Dt.ToString(sLongDateFormat),
+                    VacationDay.PrettyPrintPercentage(day.DayType),
+                    PrettyPrintTimeSpan(day.Hours, false)
+                }
+            );
+            
+            item.UseItemStyleForSubItems = false;
+            item.SubItems[2].ForeColor = Color.Red;
+
+            item.Tag = day; // store the VacationDay object for later
+
+            lstVacation.Items.Add(item);
+            lstVacation.Sort();
+            CalculateBalance();
+        }
+
         private void CalculateBalance()
         {
             ResetCalculatedFields();
@@ -61,6 +144,16 @@ namespace Fogcation
                     lblCurrBalance.Text = PrettyPrintTimeSpan(currBalance.Value, true);
                     AddOpeningLogEntry(currBalance.Value);
 
+                    var dictVacation = new Dictionary<DateTime, VacationDay>();
+                    foreach (ListViewItem item in lstVacation.Items)
+                    {
+                        var day = item.Tag as VacationDay;
+                        if (day.Dt >= dtCurr.Value.Date && day.Dt <= dtFuture.Value.Date)
+                        {
+                            dictVacation.Add(day.Dt.Date, day);
+                        }
+                    }
+
                     var futureBalance = currBalance.Value;
 
                     int cPayPeriods = 0;
@@ -68,6 +161,12 @@ namespace Fogcation
                     DateTime dtEnd = new DateTime(dtFuture.Value.Year, dtFuture.Value.Month, dtFuture.Value.Day, 14, 0, 0);
                     while ((dt = dt.AddDays(1)) <= dtEnd)
                     {
+                        if (dictVacation.ContainsKey(dt.Date))
+                        {
+                            futureBalance += dictVacation[dt.Date].Hours;
+                            AddVacationDayLogEntry(dictVacation[dt.Date], futureBalance);
+                        }
+
                         if (dt.Day == 15 || dt.Day == DateTime.DaysInMonth(dt.Year, dt.Month))
                         {
                             futureBalance += tsVacationTimePerPayPeriod;
@@ -191,10 +290,11 @@ namespace Fogcation
             }
         }
 
-        private void UpdateLogColumns()
+        private void ResizeControls()
         {
             // the extra 21 avoids triggering a horizontal scrollbar if/when a vertical scrollbar is needed
             lstLog.Columns[0].Width = lstLog.Width - 21 - lstLog.Columns[1].Width - lstLog.Columns[2].Width;
+            lstVacation.Columns[0].Width = lstVacation.Width - 21 - lstVacation.Columns[1].Width - lstVacation.Columns[2].Width;
         }
 
         private void AddOpeningLogEntry(TimeSpan balance)
@@ -202,7 +302,7 @@ namespace Fogcation
             AddLogEntry(
                 String.Format(
                     "Starting balance on {0}",
-                    dtCurr.Value.ToLongDateString()
+                    dtCurr.Value.ToString(sLongDateFormat)
                 ),
                 balance
             );
@@ -213,9 +313,20 @@ namespace Fogcation
             AddLogEntry(
                 String.Format(
                     "{0} payday! +({1}h {2}m)",
-                    dt.ToString("MMMM d, yyyy"),
+                    dt.ToString(sLongDateFormat),
                     tsVacationTimePerPayPeriod.Hours,
                     tsVacationTimePerPayPeriod.Minutes
+                ),
+                balance
+            );
+        }
+
+        private void AddVacationDayLogEntry(VacationDay day, TimeSpan balance)
+        {
+            AddLogEntry(
+                String.Format(
+                    "YAY! Vacation day! {0}",
+                    day
                 ),
                 balance
             );
