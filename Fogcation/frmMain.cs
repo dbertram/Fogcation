@@ -294,9 +294,19 @@ namespace Fogcation
 
         private void ResizeControls()
         {
-            // the extra 21 avoids triggering a horizontal scrollbar if/when a vertical scrollbar is needed
-            lstLog.Columns[0].Width = lstLog.Width - 21 - lstLog.Columns[1].Width - lstLog.Columns[2].Width;
-            lstVacation.Columns[0].Width = lstVacation.Width - 21 - lstVacation.Columns[1].Width - lstVacation.Columns[2].Width;
+            var listViews = new ListView[] { lstVacation, lstLog };
+            
+            foreach(var lst in listViews)
+            {
+                int otherCols = 0;
+                for (int ix = 1; ix < lst.Columns.Count; ix++ )
+                {
+                    otherCols += lst.Columns[ix].Width;
+                }
+
+                // the extra 21 avoids triggering a horizontal scrollbar if/when a vertical scrollbar is needed
+                lst.Columns[0].Width = lst.Width - 21 - otherCols;
+            }
         }
 
         private void AddOpeningLogEntry(TimeSpan balance)
@@ -306,6 +316,7 @@ namespace Fogcation
                     "Starting balance on {0}",
                     dtCurr.Value.ToString(sLongDateFormat)
                 ),
+                TimeSpan.Zero,
                 balance
             );
         }
@@ -314,11 +325,12 @@ namespace Fogcation
         {
             AddLogEntry(
                 String.Format(
-                    "{0} payday! +({1}h {2}m)",
+                    "{0} payday!",
                     dt.ToString(sLongDateFormat),
                     tsVacationTimePerPayPeriod.Hours,
                     tsVacationTimePerPayPeriod.Minutes
                 ),
+                tsVacationTimePerPayPeriod,
                 balance
             );
         }
@@ -327,9 +339,10 @@ namespace Fogcation
         {
             AddLogEntry(
                 String.Format(
-                    "YAY! Vacation day! {0}",
+                    "Vacation day: {0}",
                     day
                 ),
+                day.Hours,
                 balance
             );
         }
@@ -342,29 +355,30 @@ namespace Fogcation
                     cPayPeriods,
                     cPayPeriods == 1 ? "" : "s"
                 ),
+                TimeSpan.Zero,
                 balance
             );
         }
 
-        private void AddLogEntry(DateTime dt, TimeSpan balance)
-        {
-            AddLogEntry(dt.ToLongDateString(), balance);
-        }
-
-        private void AddLogEntry(string s, TimeSpan balance)
+        private void AddLogEntry(string s, TimeSpan delta, TimeSpan balance)
         {
             var item = new ListViewItem(
                 new string[] {
                     s,
+                    delta == TimeSpan.Zero ? "" : PrettyPrintTimeSpan(delta, false),
                     PrettyPrintTimeSpan(balance, false),
                     PrettyPrintTimeSpan(balance, true)
                 }
             );
 
-            var col = balance.Ticks < 0 ? Color.Red : Color.SeaGreen;
             item.UseItemStyleForSubItems = false;
-            item.SubItems[1].ForeColor = col;
-            item.SubItems[2].ForeColor = col;
+
+            var colDelta = delta.Ticks < 0 ? Color.Red : Color.SeaGreen;
+            item.SubItems[1].ForeColor = colDelta;
+
+            var colBalance = balance.Ticks < 0 ? Color.Red : Color.SeaGreen;
+            item.SubItems[2].ForeColor = colBalance;
+            item.SubItems[3].ForeColor = colBalance;
 
             lstLog.Items.Add(item);
         }
