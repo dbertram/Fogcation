@@ -142,6 +142,7 @@ namespace Fogcation
                 {
                     errorProvider.SetError(txtCurrBalance, "");
                     lblCurrBalance.Text = PrettyPrintTimeSpan(currBalance.Value, true);
+                    lblCurrBalance.ForeColor = currBalance.Value.Ticks < 0 ? Color.Red : Color.SeaGreen;
                     AddOpeningLogEntry(currBalance.Value);
 
                     var dictVacation = new Dictionary<DateTime, VacationDay>();
@@ -187,6 +188,7 @@ namespace Fogcation
         private void ResetCalculatedFields()
         {
             lblCurrBalance.Text = "N/A";
+            lblCurrBalance.ForeColor = Color.Black;
             lstLog.Items.Clear();
         }
 
