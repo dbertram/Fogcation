@@ -52,6 +52,7 @@
             this.btnAdd = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
+            this.colDelta = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
@@ -139,6 +140,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.lstLog.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colType,
+            this.colDelta,
             this.colBalanceHours,
             this.colBalanceDays});
             this.lstLog.FullRowSelect = true;
@@ -147,7 +149,7 @@
             this.lstLog.HideSelection = false;
             this.lstLog.Location = new System.Drawing.Point(15, 290);
             this.lstLog.Name = "lstLog";
-            this.lstLog.Size = new System.Drawing.Size(601, 124);
+            this.lstLog.Size = new System.Drawing.Size(647, 124);
             this.lstLog.TabIndex = 15;
             this.lstLog.UseCompatibleStateImageBehavior = false;
             this.lstLog.View = System.Windows.Forms.View.Details;
@@ -155,7 +157,7 @@
             // colType
             // 
             this.colType.Text = "";
-            this.colType.Width = 324;
+            this.colType.Width = 254;
             // 
             // colBalanceHours
             // 
@@ -192,7 +194,7 @@
             this.lstVacation.HideSelection = false;
             this.lstVacation.Location = new System.Drawing.Point(15, 89);
             this.lstVacation.Name = "lstVacation";
-            this.lstVacation.Size = new System.Drawing.Size(510, 145);
+            this.lstVacation.Size = new System.Drawing.Size(556, 145);
             this.lstVacation.TabIndex = 17;
             this.lstVacation.UseCompatibleStateImageBehavior = false;
             this.lstVacation.View = System.Windows.Forms.View.Details;
@@ -200,7 +202,7 @@
             // colDate
             // 
             this.colDate.Text = "Date";
-            this.colDate.Width = 339;
+            this.colDate.Width = 385;
             // 
             // colPercentage
             // 
@@ -217,7 +219,7 @@
             // btnAdd
             // 
             this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAdd.Location = new System.Drawing.Point(541, 89);
+            this.btnAdd.Location = new System.Drawing.Point(587, 89);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
             this.btnAdd.TabIndex = 18;
@@ -228,7 +230,7 @@
             // btnRemove
             // 
             this.btnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRemove.Location = new System.Drawing.Point(541, 119);
+            this.btnRemove.Location = new System.Drawing.Point(587, 119);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(75, 23);
             this.btnRemove.TabIndex = 19;
@@ -239,7 +241,7 @@
             // btnClear
             // 
             this.btnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClear.Location = new System.Drawing.Point(541, 149);
+            this.btnClear.Location = new System.Drawing.Point(587, 149);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(75, 23);
             this.btnClear.TabIndex = 20;
@@ -247,11 +249,17 @@
             this.btnClear.UseVisualStyleBackColor = true;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
+            // colDelta
+            // 
+            this.colDelta.Text = "Change in hours";
+            this.colDelta.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.colDelta.Width = 116;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(628, 428);
+            this.ClientSize = new System.Drawing.Size(674, 428);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnRemove);
             this.Controls.Add(this.btnAdd);
@@ -268,7 +276,7 @@
             this.Controls.Add(this.lblCurr);
             this.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(644, 409);
+            this.MinimumSize = new System.Drawing.Size(690, 409);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Fogcation - Fog Creek Vacation Calculator";
@@ -303,6 +311,7 @@
         private System.Windows.Forms.ColumnHeader colPercentage;
         private System.Windows.Forms.ColumnHeader colTime;
         private System.Windows.Forms.Label lblVacation;
+        private System.Windows.Forms.ColumnHeader colDelta;
     }
 }
 
