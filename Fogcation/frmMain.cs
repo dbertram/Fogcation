@@ -168,7 +168,7 @@ namespace Fogcation
 
             data.fLoading = true;
             dtCurr.Value = data.StartDate.Date;
-            txtCurrBalance.Text = String.Format("{0}:{1}", (int)data.StartBalance.TotalHours, data.StartBalance.Minutes);
+            txtCurrBalance.Text = String.Format("{0}:{1}", (int)data.StartBalance.TotalHours, Math.Abs(data.StartBalance.Minutes));
             lstVacation.Items.Clear();
             foreach (var day in data.VacationDays)
             {
