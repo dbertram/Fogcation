@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace Fogcation
 {
@@ -15,23 +18,26 @@ namespace Fogcation
         internal static int cHoursInAWorkDay = 8;
         // the default long-form date format
         internal static string sLongDateFormat = "MMMM d, yyyy";
+        // the current file format version
+        internal static Version fileFormat = new Version(1, 0);
 
         // the amount of vacation time accrued per pay period
         private static TimeSpan tsVacationTimePerPayPeriod = new TimeSpan(6, 40, 0);
-
         private dlgVacationDay dlgVacationDay = new dlgVacationDay();
+
+        private VacationData data = new VacationData();
+        XmlSerializer serializer = new XmlSerializer(typeof(VacationData));
 
         public frmMain()
         {
             InitializeComponent();
-            
-            dtCurr.Value = DateTime.Now;
-            dtFuture.Value = DateTime.Now;
-            dlgVacationDay.dt.Value = DateTime.Now;
 
             lstVacation.ListViewItemSorter = new VacationListViewSorter();
-
+            
             ResizeControls();
+
+            var sDefaultData = ConfigurationManager.AppSettings["DefaultVacationDataFile"];
+            LoadData(File.Exists(sDefaultData) ? sDefaultData : null);
         }
         
         private void Main_Resize(object sender, EventArgs e)
@@ -39,20 +45,181 @@ namespace Fogcation
             ResizeControls();
         }
 
+        #region File Menu
+
+        private void mnuFileNew_Click(object sender, EventArgs e)
+        {
+            if (PrepForClose())
+            {
+                LoadData(null);
+            }
+        }
+
+        private void mnuFileOpen_Click(object sender, EventArgs e)
+        {
+            if (PrepForClose() && dlgOpen.ShowDialog(this) == DialogResult.OK)
+            {
+                LoadData(dlgOpen.FileName);
+            }
+        }
+
+        private void mnuFileSave_Click(object sender, EventArgs e)
+        {
+            SaveData(false);
+        }
+
+        private void mnuFileSaveAs_Click(object sender, EventArgs e)
+        {
+            SaveData(true);
+        }
+
+        private void mnuFileExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!PrepForClose()) e.Cancel = true;
+        }
+
+        private bool PrepForClose()
+        {
+            if (data.fDirty)
+            {
+                var result = MessageBox.Show("Save changes?", "Save vacation data?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result == DialogResult.Cancel)
+                {
+                    return false;
+                }
+                else if (result == DialogResult.Yes)
+                {
+                    if (!SaveData(false))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private bool SaveData(bool fForceDialog)
+        {
+            if (!(String.IsNullOrEmpty(data.sFileName) || data.fDirty || fForceDialog)) return true; // already saved!
+
+            if (String.IsNullOrEmpty(data.sFileName) || fForceDialog)
+            {
+                if (dlgSave.ShowDialog(this) == DialogResult.OK)
+                {
+                    data.sFileName = dlgSave.FileName;
+                }
+                else if (fForceDialog)
+                {
+                    // if they force the save dialog, but cancel out of it, bail
+                    return false;
+                }
+            }
+
+            if (!String.IsNullOrEmpty(data.sFileName))
+            {
+                TextWriter WriteFileStream = new StreamWriter(data.sFileName);
+                serializer.Serialize(WriteFileStream, data);
+                WriteFileStream.Close();
+                data.fDirty = false;
+                return true;
+            }
+
+            return false;
+        }
+
+        private void LoadData(string sFileName)
+        {
+            var fSuccessfulLoad = false;
+
+            if (sFileName != null)
+            {
+                try
+                {
+                    FileStream ReadFileStream = new FileStream(sFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    data = serializer.Deserialize(ReadFileStream) as VacationData;
+                    ReadFileStream.Close();
+
+                    if (data.FileFormat > fileFormat)
+                    {
+                        throw new InvalidDataException(String.Format("The specified file is file format version {0}. This applicatioin can only open file format version {1} and earlier", data.FileFormat, fileFormat));
+                    }
+
+                    fSuccessfulLoad = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ruh roh...\n\n" + ex.ToString(), "Load error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+            }
+
+            if (!fSuccessfulLoad)
+            {
+                data = new VacationData();
+                data.StartDate = data.TargetDate = DateTime.Now.Date;
+            }
+
+            dlgVacationDay.dt.Value = data.StartDate.Date;
+
+            data.fLoading = true;
+            dtCurr.Value = data.StartDate.Date;
+            txtCurrBalance.Text = String.Format("{0}:{1}", (int)data.StartBalance.TotalHours, data.StartBalance.Minutes);
+            lstVacation.Items.Clear();
+            foreach (var day in data.VacationDays)
+            {
+                AddVacationDay(day);
+            }
+            dtFuture.Value = data.TargetDate.Date;
+            data.fLoading = false;
+            CalculateBalance();
+        }
+
+        #endregion
+
         private void dtFuture_ValueChanged(object sender, EventArgs e)
         {
-            CalculateBalance();
+            if (!data.fLoading)
+            {
+                data.TargetDate = dtFuture.Value.Date;
+                data.fDirty = true;
+                CalculateBalance();
+            }
         }
 
         private void txtCurrBalance_TextChanged(object sender, EventArgs e)
         {
-            CalculateBalance();
+            TimeSpan? ts = TimeSpanFromBalance(txtCurrBalance.Text);
+            if (!data.fLoading)
+            {
+                if(ts.HasValue)
+                {
+                    data.StartBalance = ts.Value;
+                }
+                else
+                {
+                    data.StartBalance = TimeSpan.Zero;
+                }
+                data.fDirty = true;
+                CalculateBalance();
+            }
         }
 
         private void dtCurr_ValueChanged(object sender, EventArgs e)
         {
-            CalculateBalance();
+            if (!data.fLoading)
+            {
+                data.StartDate = dtCurr.Value.Date;
+                data.fDirty = true;
+                CalculateBalance();
+            }
         }
+
+        #region Buttons for lstVacation
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
@@ -65,47 +232,21 @@ namespace Fogcation
             }
             else
             {
-                // don't save the last entered date if they canceled
+                // don't preserve the last entered date if they canceled
                 dlgVacationDay.dt.Value = dt;
             }
         }
 
-        private void btnRemove_Click(object sender, EventArgs e)
-        {
-            if (lstVacation.SelectedItems.Count < 1) return;
-
-            var item = lstVacation.SelectedItems[0];
-            var day = item.Tag as VacationDay;
-
-            var result = MessageBox.Show(
-                "Are you sure you want to remove the following vacation day?\n\n" + day,
-                "Remove Vacation Day?",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            );
-
-            if (result == DialogResult.Yes)
-            {
-                item.Remove();
-                lstVacation.Sort();
-            }
-        }
-
-        private void btnClear_Click(object sender, EventArgs e)
-        {
-            lstVacation.Items.Clear();
-        }
-
-        private void AddVacationDay(VacationDay day)
+        private void AddVacationDay(VacationDay dayNew)
         {
             // check for dupes!
             foreach (ListViewItem viewitem in lstVacation.Items)
             {
-                if ((viewitem.Tag as VacationDay).Dt.Date == day.Dt.Date)
+                if ((viewitem.Tag as VacationDay).Dt.Date == dayNew.Dt.Date)
                 {
                     MessageBox.Show(
                         "That date has already been added!",
-                        "Cannot add " + day.Dt.ToString(sLongDateFormat),
+                        "Cannot add " + dayNew.Dt.ToString(sLongDateFormat),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Exclamation
                     );
@@ -115,21 +256,68 @@ namespace Fogcation
 
             var item = new ListViewItem(
                 new string[] {
-                    day.Dt.ToString(sLongDateFormat),
-                    VacationDay.PrettyPrintPercentage(day.DayType),
-                    PrettyPrintTimeSpan(day.Hours, false)
+                    dayNew.Dt.ToString(sLongDateFormat),
+                    VacationDay.PrettyPrintPercentage(dayNew.DayType),
+                    PrettyPrintTimeSpan(dayNew.Hours, false)
                 }
             );
-            
+
             item.UseItemStyleForSubItems = false;
             item.SubItems[2].ForeColor = Color.Red;
 
-            item.Tag = day; // store the VacationDay object for later
+            item.Tag = dayNew; // store the VacationDay object for later
 
             lstVacation.Items.Add(item);
             lstVacation.Sort();
-            CalculateBalance();
+
+            if (!data.fLoading)
+            {
+                data.VacationDays.Add(dayNew);
+                data.fDirty = true;
+
+                CalculateBalance();
+            }
         }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            if (lstVacation.SelectedItems.Count < 1) return;
+
+            var item = lstVacation.SelectedItems[0];
+            var dayToDelete = item.Tag as VacationDay;
+
+            var result = MessageBox.Show(
+                "Are you sure you want to remove the following vacation day?\n\n" + dayToDelete,
+                "Remove Vacation Day?",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                item.Remove();
+                lstVacation.Sort();
+
+                foreach (var day in data.VacationDays)
+                {
+                    if (day.Dt.Date == dayToDelete.Dt.Date)
+                    {
+                        data.VacationDays.Remove(day);
+                        break;
+                    }
+                }
+                data.fDirty = true;
+            }
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            lstVacation.Items.Clear();
+            data.VacationDays.Clear();
+            data.fDirty = true;
+        }
+
+        #endregion
 
         private void CalculateBalance()
         {

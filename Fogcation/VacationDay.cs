@@ -6,6 +6,7 @@ namespace Fogcation
 {
     public enum Percentage { FullDay, HalfDay };
 
+    [Serializable]
     public class VacationDay
     {
         public DateTime Dt { get; set; }
