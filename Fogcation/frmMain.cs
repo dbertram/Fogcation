@@ -307,6 +307,7 @@ namespace Fogcation
                     }
                 }
                 data.fDirty = true;
+                CalculateBalance();
             }
         }
 
@@ -315,6 +316,7 @@ namespace Fogcation
             lstVacation.Items.Clear();
             data.VacationDays.Clear();
             data.fDirty = true;
+            CalculateBalance();
         }
 
         #endregion
