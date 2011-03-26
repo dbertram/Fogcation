@@ -267,6 +267,7 @@ namespace Fogcation
                     PrettyPrintTimeSpan(dayNew.Hours, false)
                 }
             );
+            item.Group = GetListViewGroup(lstVacation, dayNew.Dt.Year.ToString());;
 
             item.UseItemStyleForSubItems = false;
             item.SubItems[2].ForeColor = Color.Red;
@@ -281,7 +282,6 @@ namespace Fogcation
             {
                 data.VacationDays.Add(dayNew);
                 data.fDirty = true;
-
                 CalculateBalance();
             }
         }
@@ -387,6 +387,34 @@ namespace Fogcation
             lblCurrBalance.Text = "N/A";
             lblCurrBalance.ForeColor = Color.Black;
             lstLog.Items.Clear();
+        }
+
+        private ListViewGroup GetListViewGroup(ListView lst, string sHeaderText)
+        {
+            // we'll need a list of all the groups if we decide to add one later
+            var lstGroups = new List<ListViewGroup>();
+
+            // check if there's an existing group with the requested header text
+            foreach (ListViewGroup group in lst.Groups)
+            {
+                if (group.Header == sHeaderText)
+                {
+                    return group;
+                }
+                lstGroups.Add(group);
+            }
+
+            // no group for the specified header text, so let's add one
+            var newGroup = new ListViewGroup(sHeaderText);
+            lstGroups.Add(newGroup);
+            lstGroups.Sort((grp1, grp2) => String.Compare(grp1.Header, grp2.Header));
+
+            lst.BeginUpdate();
+            lst.Groups.Clear();
+            lst.Groups.AddRange(lstGroups.ToArray());
+            lst.EndUpdate();
+
+            return newGroup;
         }
 
         private static string PrettyPrintTimeSpan(TimeSpan interval, bool fInWorkdays)
@@ -514,7 +542,8 @@ namespace Fogcation
                     dtCurr.Value.ToString(sLongDateFormat)
                 ),
                 TimeSpan.Zero,
-                balance
+                balance,
+                dtCurr.Value.Year
             );
         }
 
@@ -528,7 +557,8 @@ namespace Fogcation
                     tsVacationTimePerPayPeriod.Minutes
                 ),
                 tsVacationTimePerPayPeriod,
-                balance
+                balance,
+                dt.Year
             );
         }
 
@@ -540,7 +570,8 @@ namespace Fogcation
                     day
                 ),
                 day.Hours,
-                balance
+                balance,
+                day.Dt.Year
             );
         }
 
@@ -553,11 +584,12 @@ namespace Fogcation
                     cPayPeriods == 1 ? "" : "s"
                 ),
                 TimeSpan.Zero,
-                balance
+                balance,
+                dtFuture.Value.Year
             );
         }
 
-        private void AddLogEntry(string s, TimeSpan delta, TimeSpan balance)
+        private void AddLogEntry(string s, TimeSpan delta, TimeSpan balance, int year)
         {
             var item = new ListViewItem(
                 new string[] {
@@ -567,7 +599,7 @@ namespace Fogcation
                     PrettyPrintTimeSpan(balance, true)
                 }
             );
-
+            item.Group = GetListViewGroup(lstLog, year.ToString());
             item.UseItemStyleForSubItems = false;
 
             var colDelta = delta.Ticks < 0 ? Color.Red : Color.SeaGreen;
