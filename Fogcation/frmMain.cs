@@ -39,7 +39,13 @@ namespace Fogcation
             var sDefaultData = ConfigurationManager.AppSettings["DefaultVacationDataFile"];
             LoadData(File.Exists(sDefaultData) ? sDefaultData : null);
         }
-        
+
+        private void Main_Shown(object sender, EventArgs e)
+        {
+            ScrollToBottom(lstVacation);
+            ScrollToBottom(lstLog);
+        }
+
         private void Main_Resize(object sender, EventArgs e)
         {
             ResizeControls();
@@ -269,6 +275,7 @@ namespace Fogcation
 
             lstVacation.Items.Add(item);
             lstVacation.Sort();
+            item.EnsureVisible();
 
             if (!data.fLoading)
             {
@@ -571,6 +578,14 @@ namespace Fogcation
             item.SubItems[3].ForeColor = colBalance;
 
             lstLog.Items.Add(item);
+            ScrollToBottom(lstLog);
         }
+
+        private void ScrollToBottom(ListView lst)
+        {
+            if(lst.Items.Count == 0) return;
+            lst.Items[lst.Items.Count - 1].EnsureVisible();
+        }
+
     }
 }
