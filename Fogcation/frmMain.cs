@@ -290,29 +290,40 @@ namespace Fogcation
         {
             if (lstVacation.SelectedItems.Count < 1) return;
 
-            var item = lstVacation.SelectedItems[0];
-            var dayToDelete = item.Tag as VacationDay;
-
+            var itemsToDelete = new List<ListViewItem>();
+            var daysToDelete = new List<VacationDay>();
+            foreach (ListViewItem item in lstVacation.SelectedItems)
+            {
+                itemsToDelete.Add(item);
+                daysToDelete.Add(item.Tag as VacationDay);
+            }
+            
+            var suffix = itemsToDelete.Count == 1 ? "" : "s";
             var result = MessageBox.Show(
-                "Are you sure you want to remove the following vacation day?\n\n" + dayToDelete,
-                "Remove Vacation Day?",
+                String.Format(
+                    "Are you sure you want to remove the following vacation day{0}?\n\n{1}",
+                    suffix,
+                    String.Join("\n", daysToDelete.ConvertAll<string>(day => day.ToString()).ToArray())
+                ),
+                String.Format(
+                    "Remove Vacation Day{0}?",
+                    suffix
+                ),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question
             );
 
             if (result == DialogResult.Yes)
             {
-                item.Remove();
-                lstVacation.Sort();
+                itemsToDelete.ForEach(item => item.Remove());
 
-                foreach (var day in data.VacationDays)
-                {
-                    if (day.Dt.Date == dayToDelete.Dt.Date)
-                    {
-                        data.VacationDays.Remove(day);
-                        break;
-                    }
-                }
+                daysToDelete.ForEach(
+                    dayToDelete =>
+                        data.VacationDays.Remove(
+                            data.VacationDays.Find(vd => vd.Dt.Date == dayToDelete.Dt.Date)
+                        )
+                );
+
                 data.fDirty = true;
                 CalculateBalance();
             }
