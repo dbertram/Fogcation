@@ -45,7 +45,6 @@
             this.colDelta = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colBalanceHours = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colBalanceDays = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lblVacation = new System.Windows.Forms.Label();
             this.lstVacation = new System.Windows.Forms.ListView();
             this.colDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colPercentage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -87,7 +86,8 @@
             // 
             // txtCurrBalance
             // 
-            this.txtCurrBalance.Location = new System.Drawing.Point(12, 55);
+            this.txtCurrBalance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCurrBalance.Location = new System.Drawing.Point(637, 28);
             this.txtCurrBalance.Name = "txtCurrBalance";
             this.txtCurrBalance.Size = new System.Drawing.Size(70, 24);
             this.txtCurrBalance.TabIndex = 3;
@@ -101,8 +101,9 @@
             // 
             // lblFuture
             // 
+            this.lblFuture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblFuture.AutoSize = true;
-            this.lblFuture.Location = new System.Drawing.Point(12, 277);
+            this.lblFuture.Location = new System.Drawing.Point(12, 555);
             this.lblFuture.Name = "lblFuture";
             this.lblFuture.Size = new System.Drawing.Size(136, 17);
             this.lblFuture.TabIndex = 4;
@@ -110,8 +111,9 @@
             // 
             // dtFuture
             // 
+            this.dtFuture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.dtFuture.CustomFormat = "";
-            this.dtFuture.Location = new System.Drawing.Point(151, 274);
+            this.dtFuture.Location = new System.Drawing.Point(151, 552);
             this.dtFuture.Name = "dtFuture";
             this.dtFuture.Size = new System.Drawing.Size(200, 24);
             this.dtFuture.TabIndex = 5;
@@ -120,7 +122,7 @@
             // lblCurrPayPeriod
             // 
             this.lblCurrPayPeriod.AutoSize = true;
-            this.lblCurrPayPeriod.Location = new System.Drawing.Point(365, 31);
+            this.lblCurrPayPeriod.Location = new System.Drawing.Point(357, 31);
             this.lblCurrPayPeriod.Name = "lblCurrPayPeriod";
             this.lblCurrPayPeriod.Size = new System.Drawing.Size(67, 17);
             this.lblCurrPayPeriod.TabIndex = 2;
@@ -128,8 +130,9 @@
             // 
             // lblFuturePayPeriod
             // 
+            this.lblFuturePayPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblFuturePayPeriod.AutoSize = true;
-            this.lblFuturePayPeriod.Location = new System.Drawing.Point(365, 277);
+            this.lblFuturePayPeriod.Location = new System.Drawing.Point(357, 555);
             this.lblFuturePayPeriod.Name = "lblFuturePayPeriod";
             this.lblFuturePayPeriod.Size = new System.Drawing.Size(67, 17);
             this.lblFuturePayPeriod.TabIndex = 6;
@@ -137,8 +140,9 @@
             // 
             // lblCurrBalance
             // 
+            this.lblCurrBalance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCurrBalance.AutoSize = true;
-            this.lblCurrBalance.Location = new System.Drawing.Point(96, 58);
+            this.lblCurrBalance.Location = new System.Drawing.Point(713, 31);
             this.lblCurrBalance.Name = "lblCurrBalance";
             this.lblCurrBalance.Size = new System.Drawing.Size(60, 17);
             this.lblCurrBalance.TabIndex = 8;
@@ -146,9 +150,9 @@
             // 
             // lstLog
             // 
-            this.lstLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lstLog.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colType,
             this.colDelta,
@@ -158,9 +162,9 @@
             this.lstLog.GridLines = true;
             this.lstLog.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lstLog.HideSelection = false;
-            this.lstLog.Location = new System.Drawing.Point(15, 312);
+            this.lstLog.Location = new System.Drawing.Point(12, 58);
             this.lstLog.Name = "lstLog";
-            this.lstLog.Size = new System.Drawing.Size(647, 126);
+            this.lstLog.Size = new System.Drawing.Size(619, 485);
             this.lstLog.TabIndex = 15;
             this.lstLog.UseCompatibleStateImageBehavior = false;
             this.lstLog.View = System.Windows.Forms.View.Details;
@@ -168,39 +172,30 @@
             // colType
             // 
             this.colType.Text = "";
-            this.colType.Width = 254;
+            this.colType.Width = 275;
             // 
             // colDelta
             // 
             this.colDelta.Text = "Change in hours";
             this.colDelta.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.colDelta.Width = 116;
+            this.colDelta.Width = 105;
             // 
             // colBalanceHours
             // 
             this.colBalanceHours.Text = "Balance in hours";
             this.colBalanceHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.colBalanceHours.Width = 116;
+            this.colBalanceHours.Width = 105;
             // 
             // colBalanceDays
             // 
             this.colBalanceDays.Text = "Balance in work days";
             this.colBalanceDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.colBalanceDays.Width = 140;
-            // 
-            // lblVacation
-            // 
-            this.lblVacation.AutoSize = true;
-            this.lblVacation.Location = new System.Drawing.Point(12, 91);
-            this.lblVacation.Name = "lblVacation";
-            this.lblVacation.Size = new System.Drawing.Size(91, 17);
-            this.lblVacation.TabIndex = 16;
-            this.lblVacation.Text = "Vacation Days:";
+            this.colBalanceDays.Width = 130;
             // 
             // lstVacation
             // 
-            this.lstVacation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstVacation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lstVacation.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colDate,
             this.colPercentage,
@@ -209,9 +204,9 @@
             this.lstVacation.GridLines = true;
             this.lstVacation.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lstVacation.HideSelection = false;
-            this.lstVacation.Location = new System.Drawing.Point(15, 111);
+            this.lstVacation.Location = new System.Drawing.Point(637, 58);
             this.lstVacation.Name = "lstVacation";
-            this.lstVacation.Size = new System.Drawing.Size(556, 145);
+            this.lstVacation.Size = new System.Drawing.Size(297, 485);
             this.lstVacation.TabIndex = 17;
             this.lstVacation.UseCompatibleStateImageBehavior = false;
             this.lstVacation.View = System.Windows.Forms.View.Details;
@@ -219,26 +214,26 @@
             // colDate
             // 
             this.colDate.Text = "Date";
-            this.colDate.Width = 385;
+            this.colDate.Width = 158;
             // 
             // colPercentage
             // 
             this.colPercentage.Text = "% day";
             this.colPercentage.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.colPercentage.Width = 50;
+            this.colPercentage.Width = 45;
             // 
             // colTime
             // 
             this.colTime.Text = "Time in hours";
             this.colTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.colTime.Width = 100;
+            this.colTime.Width = 90;
             // 
             // btnAdd
             // 
-            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAdd.Location = new System.Drawing.Point(587, 111);
+            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAdd.Location = new System.Drawing.Point(637, 551);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(75, 23);
+            this.btnAdd.Size = new System.Drawing.Size(95, 23);
             this.btnAdd.TabIndex = 18;
             this.btnAdd.Text = "&Add...";
             this.btnAdd.UseVisualStyleBackColor = true;
@@ -246,10 +241,10 @@
             // 
             // btnRemove
             // 
-            this.btnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRemove.Location = new System.Drawing.Point(587, 141);
+            this.btnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRemove.Location = new System.Drawing.Point(738, 551);
             this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(75, 23);
+            this.btnRemove.Size = new System.Drawing.Size(95, 23);
             this.btnRemove.TabIndex = 19;
             this.btnRemove.Text = "&Remove";
             this.btnRemove.UseVisualStyleBackColor = true;
@@ -257,10 +252,10 @@
             // 
             // btnClear
             // 
-            this.btnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClear.Location = new System.Drawing.Point(587, 171);
+            this.btnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClear.Location = new System.Drawing.Point(839, 551);
             this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(75, 23);
+            this.btnClear.Size = new System.Drawing.Size(95, 23);
             this.btnClear.TabIndex = 20;
             this.btnClear.Text = "&Clear All";
             this.btnClear.UseVisualStyleBackColor = true;
@@ -279,7 +274,7 @@
             this.mnuFile});
             this.mnuMain.Location = new System.Drawing.Point(0, 0);
             this.mnuMain.Name = "mnuMain";
-            this.mnuMain.Size = new System.Drawing.Size(674, 24);
+            this.mnuMain.Size = new System.Drawing.Size(944, 24);
             this.mnuMain.TabIndex = 22;
             this.mnuMain.Text = "menuStrip1";
             // 
@@ -350,12 +345,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(674, 450);
+            this.ClientSize = new System.Drawing.Size(944, 582);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnRemove);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.lstVacation);
-            this.Controls.Add(this.lblVacation);
             this.Controls.Add(this.lstLog);
             this.Controls.Add(this.lblCurrBalance);
             this.Controls.Add(this.lblFuturePayPeriod);
@@ -369,7 +363,7 @@
             this.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mnuMain;
-            this.MinimumSize = new System.Drawing.Size(690, 431);
+            this.MinimumSize = new System.Drawing.Size(960, 200);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Fogcation - Fog Creek Vacation Calculator";
@@ -407,7 +401,6 @@
         private System.Windows.Forms.ColumnHeader colDate;
         private System.Windows.Forms.ColumnHeader colPercentage;
         private System.Windows.Forms.ColumnHeader colTime;
-        private System.Windows.Forms.Label lblVacation;
         private System.Windows.Forms.ColumnHeader colDelta;
         private System.Windows.Forms.SaveFileDialog dlgSave;
         private System.Windows.Forms.MenuStrip mnuMain;
