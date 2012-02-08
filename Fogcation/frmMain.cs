@@ -170,7 +170,7 @@ namespace Fogcation
                 data.StartDate = data.TargetDate = DateTime.Now.Date;
             }
 
-            dlgVacationDay.dt.Value = data.StartDate.Date;
+            dlgVacationDay.dt.Value = data.TargetDate.Date;
 
             data.fLoading = true;
             dtCurr.Value = data.StartDate.Date;
