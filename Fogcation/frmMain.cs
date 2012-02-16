@@ -237,7 +237,7 @@ namespace Fogcation
         private void btnAdd_Click(object sender, EventArgs e)
         {
             var dt = dlgVacationDay.dt.Value;
-            dlgVacationDay.Percentage = Percentage.FullDay;
+            dlgVacationDay.DayType = DayType.FullDay;
 
             if (dlgVacationDay.ShowDialog(this) == DialogResult.OK)
             {
@@ -270,8 +270,8 @@ namespace Fogcation
             var item = new ListViewItem(
                 new string[] {
                     dayNew.Dt.ToString(sLongDateFormat),
-                    VacationDay.PrettyPrintPercentage(dayNew.DayType),
-                    PrettyPrintTimeSpan(dayNew.Hours, false)
+                    VacationDay.PrettyPrintDayType(dayNew.DayType),
+                    dayNew.DayType == DayType.CompanyHoliday ? "" : PrettyPrintTimeSpan(dayNew.Hours, false)
                 }
             );
             item.Group = GetListViewGroup(lstVacation, dayNew.Dt.Year.ToString());;
@@ -586,7 +586,8 @@ namespace Fogcation
         {
             AddLogEntry(
                 String.Format(
-                    "Vacation day: {0}",
+                    "{0}: {1}",
+                    day.DayType == DayType.CompanyHoliday ? "Company Holiday" : "Vacation Day",
                     day
                 ),
                 day.Hours,

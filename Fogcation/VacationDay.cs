@@ -4,51 +4,64 @@ using System.Text;
 
 namespace Fogcation
 {
-    public enum Percentage { FullDay, HalfDay };
+    public enum DayType { FullDay, HalfDay, CompanyHoliday };
 
     [Serializable]
     public class VacationDay
     {
         public DateTime Dt { get; set; }
-        public Percentage DayType { get; set; }
+        public DayType DayType { get; set; }
         
         public TimeSpan Hours
         {
             get
             {
-                return TimeSpanFromPercentage(DayType);
+                return TimeSpanFromDayType(DayType);
             }
         }
 
-        public static string PrettyPrintPercentage(Percentage percentage)
+        public static string PrettyPrintDayType(DayType type)
         {
-            switch (percentage)
+            switch (type)
             {
-                case Percentage.HalfDay:
+                case DayType.HalfDay:
                     return "50%";
-                case Percentage.FullDay:
+                case DayType.FullDay:
                     return "100%";
+                case DayType.CompanyHoliday:
+                    return "";
                 default:
-                    throw new ArgumentException("Invalid percentage!", "percentage");
+                    throw new ArgumentException("Invalid day type!", "type");
             }
         }
 
-        private TimeSpan TimeSpanFromPercentage(Percentage percentage)
+        private TimeSpan TimeSpanFromDayType(DayType type)
         {
             var ts = new TimeSpan(-frmMain.cHoursInAWorkDay, 0, 0);
-            if (percentage == Percentage.HalfDay)
+            if (type == DayType.HalfDay)
             {
                 ts = TimeSpan.FromTicks(ts.Ticks / 2);
+            }
+            if (type == DayType.CompanyHoliday)
+            {
+                ts = new TimeSpan(0);
             }
             return ts;
         }
 
         public override string ToString()
         {
+            var sDate = Dt.ToString(frmMain.sLongDateFormat);
+            
+            if (DayType == DayType.CompanyHoliday)
+            {
+                return sDate;
+            }
+
             return String.Format(
                 "{0} at {1}",
-                Dt.ToString(frmMain.sLongDateFormat),
-                PrettyPrintPercentage(DayType)
+                sDate,
+                PrettyPrintDayType(DayType)
             );
         }
     }
