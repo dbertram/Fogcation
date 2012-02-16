@@ -14,7 +14,7 @@ namespace Fogcation
         {
             InitializeComponent();
 
-            cboPercentage.SelectedIndex = (int)Percentage.FullDay;
+            cboDayType.SelectedIndex = (int)DayType.FullDay;
         }
         
         public VacationDay VacationDay
@@ -23,21 +23,21 @@ namespace Fogcation
             {
                 var day = new VacationDay();
                 day.Dt = dt.Value;
-                day.DayType = (Percentage)cboPercentage.SelectedIndex;
+                day.DayType = (DayType)cboDayType.SelectedIndex;
                 return day;
             }
         }
 
-        internal Percentage Percentage
+        internal DayType DayType
         {
             get
             {
-                return (Percentage)cboPercentage.SelectedIndex;
+                return (DayType)cboDayType.SelectedIndex;
             }
 
             set
             {
-                cboPercentage.SelectedIndex = (int)value;
+                cboDayType.SelectedIndex = (int)value;
             }
         }
     }
