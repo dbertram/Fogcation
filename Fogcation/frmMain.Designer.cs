@@ -62,6 +62,7 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileExit = new System.Windows.Forms.ToolStripMenuItem();
             this.dlgOpen = new System.Windows.Forms.OpenFileDialog();
+            this.imgIcons = new System.Windows.Forms.ImageList(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.mnuMain.SuspendLayout();
             this.SuspendLayout();
@@ -165,6 +166,7 @@
             this.lstLog.Location = new System.Drawing.Point(12, 58);
             this.lstLog.Name = "lstLog";
             this.lstLog.Size = new System.Drawing.Size(619, 485);
+            this.lstLog.SmallImageList = this.imgIcons;
             this.lstLog.TabIndex = 15;
             this.lstLog.UseCompatibleStateImageBehavior = false;
             this.lstLog.View = System.Windows.Forms.View.Details;
@@ -341,6 +343,14 @@
             this.dlgOpen.Filter = "XML Files (*.xml)|*.xml|All files (*.*)|*.*";
             this.dlgOpen.Title = "Open vacation data...";
             // 
+            // imgIcons
+            // 
+            this.imgIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgIcons.ImageStream")));
+            this.imgIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.imgIcons.Images.SetKeyName(0, "money_dollar.png");
+            this.imgIcons.Images.SetKeyName(1, "cocktail.ico");
+            this.imgIcons.Images.SetKeyName(2, "Negative_16x16.png");
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -412,6 +422,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnuFileNew;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem mnuFileExit;
+        private System.Windows.Forms.ImageList imgIcons;
     }
 }
 

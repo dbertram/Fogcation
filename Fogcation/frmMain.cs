@@ -14,6 +14,13 @@ namespace Fogcation
 {
     public partial class frmMain : Form
     {
+        enum LogEntryType {
+            Generic = -1,
+            PayPeriod,
+            VacationDay,
+            UnpaidLeave
+        }
+
         // the number of hours that counts as a work day
         internal static int cHoursInAWorkDay = 8;
         // the default long-form date format
@@ -554,7 +561,8 @@ namespace Fogcation
                 ),
                 TimeSpan.Zero,
                 balance,
-                dtCurr.Value.Year
+                dtCurr.Value.Year,
+                LogEntryType.Generic
             );
         }
 
@@ -569,7 +577,8 @@ namespace Fogcation
                 ),
                 tsVacationTimePerPayPeriod,
                 balance,
-                dt.Year
+                dt.Year,
+                LogEntryType.PayPeriod
             );
         }
 
@@ -582,7 +591,8 @@ namespace Fogcation
                 ),
                 day.Hours,
                 balance,
-                day.Dt.Year
+                day.Dt.Year,
+                LogEntryType.VacationDay
             );
         }
 
@@ -596,11 +606,12 @@ namespace Fogcation
                 ),
                 TimeSpan.Zero,
                 balance,
-                dtFuture.Value.Year
+                dtFuture.Value.Year,
+                LogEntryType.Generic
             );
         }
 
-        private void AddLogEntry(string s, TimeSpan delta, TimeSpan balance, int year)
+        private void AddLogEntry(string s, TimeSpan delta, TimeSpan balance, int year, LogEntryType type)
         {
             var item = new ListViewItem(
                 new string[] {
@@ -608,7 +619,8 @@ namespace Fogcation
                     delta == TimeSpan.Zero ? "" : PrettyPrintTimeSpan(delta, false),
                     PrettyPrintTimeSpan(balance, false),
                     PrettyPrintTimeSpan(balance, true)
-                }
+                },
+                (int)type
             );
             item.Group = GetListViewGroup(lstLog, year.ToString());
             item.UseItemStyleForSubItems = false;
