@@ -375,12 +375,26 @@ namespace Fogcation
                     int cPayPeriods = 0;
                     DateTime dt = new DateTime(dtCurr.Value.Year, dtCurr.Value.Month, dtCurr.Value.Day, 12, 0, 0);
                     DateTime dtEnd = new DateTime(dtFuture.Value.Year, dtFuture.Value.Month, dtFuture.Value.Day, 14, 0, 0);
+
+                    var minBalanceForYear = futureBalance;
+                    var nYearLast = dt.Year;
+
                     while ((dt = dt.AddDays(1)) <= dtEnd)
                     {
+                        if (dt.Year != nYearLast)
+                        {
+                            SetYearMin(dt.Year - 1, minBalanceForYear);
+                        }
+
                         if (dictVacation.ContainsKey(dt.Date))
                         {
                             futureBalance += dictVacation[dt.Date].Hours;
                             AddVacationDayLogEntry(dictVacation[dt.Date], futureBalance);
+                        }
+
+                        if (futureBalance < minBalanceForYear)
+                        {
+                            minBalanceForYear = futureBalance;
                         }
 
                         if (dt.Day == 15 || dt.Day == DateTime.DaysInMonth(dt.Year, dt.Month))
@@ -389,8 +403,15 @@ namespace Fogcation
                             cPayPeriods++;
                             AddPayPeriodLogEntry(dt, futureBalance);
                         }
+
+                        if (dt.Year != nYearLast)
+                        {
+                            minBalanceForYear = futureBalance;
+                        }
+                        nYearLast = dt.Year;
                     }
                     AddClosingLogEntry(cPayPeriods, futureBalance);
+                    SetYearMin(dtEnd.Year, minBalanceForYear);
                 }
                 else
                 {
@@ -400,6 +421,12 @@ namespace Fogcation
             }
         }
 
+        private void SetYearMin(int year, TimeSpan minBalanceForYear)
+        {
+            var group = GetListViewGroup(lstLog, year.ToString());
+            group.Header = String.Format("{0}: lowest balance of {1}", year.ToString(), PrettyPrintTimeSpan(minBalanceForYear, true));
+        }
+
         private void ResetCalculatedFields()
         {
             lblCurrBalance.Text = "N/A";
@@ -407,25 +434,25 @@ namespace Fogcation
             lstLog.Items.Clear();
         }
 
-        private ListViewGroup GetListViewGroup(ListView lst, string sHeaderText)
+        private ListViewGroup GetListViewGroup(ListView lst, string sGroupName)
         {
             // we'll need a list of all the groups if we decide to add one later
             var lstGroups = new List<ListViewGroup>();
 
-            // check if there's an existing group with the requested header text
+            // check if there's an existing group with the requested group name
             foreach (ListViewGroup group in lst.Groups)
             {
-                if (group.Header == sHeaderText)
+                if (group.Name == sGroupName)
                 {
                     return group;
                 }
                 lstGroups.Add(group);
             }
 
-            // no group for the specified header text, so let's add one
-            var newGroup = new ListViewGroup(sHeaderText);
+            // no group for the specified name, so let's add one (initial header text is the same as the group name)
+            var newGroup = new ListViewGroup(sGroupName, sGroupName);
             lstGroups.Add(newGroup);
-            lstGroups.Sort((grp1, grp2) => String.Compare(grp1.Header, grp2.Header));
+            lstGroups.Sort((grp1, grp2) => String.Compare(grp1.Name, grp2.Name));
 
             lst.BeginUpdate();
             lst.Groups.Clear();
