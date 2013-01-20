@@ -573,6 +573,7 @@ namespace Fogcation
             
             foreach(var lst in listViews)
             {
+                lst.SuspendLayout();
                 int otherCols = 0;
                 for (int ix = 1; ix < lst.Columns.Count; ix++ )
                 {
@@ -581,6 +582,7 @@ namespace Fogcation
 
                 // the extra 21 avoids triggering a horizontal scrollbar if/when a vertical scrollbar is needed
                 lst.Columns[0].Width = lst.Width - 21 - otherCols;
+                lst.ResumeLayout();
             }
         }
 
