@@ -354,7 +354,7 @@ namespace Fogcation
         private void CalculateBalance()
         {
             ResetCalculatedFields();
-
+            lstLog.SuspendLayout();
             if (ValidateDateRange())
             {
                 var currBalance = TimeSpanFromBalance(txtCurrBalance.Text);
@@ -424,6 +424,7 @@ namespace Fogcation
                     lblCurrBalance.Text = "You're not even trying...";
                 }
             }
+            lstLog.ResumeLayout();
         }
 
         private void SetYearMin(int year, TimeSpan minBalanceForYear)
