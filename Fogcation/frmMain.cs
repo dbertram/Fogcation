@@ -58,6 +58,11 @@ namespace Fogcation
             ResizeControls();
         }
 
+        private void splitLists_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            ResizeControls();
+        }
+
         #region File Menu
 
         private void mnuFileNew_Click(object sender, EventArgs e)

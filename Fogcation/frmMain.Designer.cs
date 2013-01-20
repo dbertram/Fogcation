@@ -40,15 +40,7 @@
             this.lblCurrPayPeriod = new System.Windows.Forms.Label();
             this.lblFuturePayPeriod = new System.Windows.Forms.Label();
             this.lblCurrBalance = new System.Windows.Forms.Label();
-            this.lstLog = new System.Windows.Forms.ListView();
-            this.colType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colDelta = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colBalanceHours = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colBalanceDays = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lstVacation = new System.Windows.Forms.ListView();
-            this.colDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colPercentage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.imgIcons = new System.Windows.Forms.ImageList(this.components);
             this.btnAdd = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
@@ -62,9 +54,23 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileExit = new System.Windows.Forms.ToolStripMenuItem();
             this.dlgOpen = new System.Windows.Forms.OpenFileDialog();
-            this.imgIcons = new System.Windows.Forms.ImageList(this.components);
+            this.pnlCenterContent = new System.Windows.Forms.Panel();
+            this.splitLists = new System.Windows.Forms.SplitContainer();
+            this.lstLog = new System.Windows.Forms.ListView();
+            this.colType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colDelta = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colBalanceHours = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colBalanceDays = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lstVacation = new System.Windows.Forms.ListView();
+            this.colDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colPercentage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.mnuMain.SuspendLayout();
+            this.pnlCenterContent.SuspendLayout();
+            this.splitLists.Panel1.SuspendLayout();
+            this.splitLists.Panel2.SuspendLayout();
+            this.splitLists.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblCurr
@@ -149,86 +155,13 @@
             this.lblCurrBalance.TabIndex = 8;
             this.lblCurrBalance.Text = "0d 0h 0m";
             // 
-            // lstLog
+            // imgIcons
             // 
-            this.lstLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lstLog.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.colType,
-            this.colDelta,
-            this.colBalanceHours,
-            this.colBalanceDays});
-            this.lstLog.FullRowSelect = true;
-            this.lstLog.GridLines = true;
-            this.lstLog.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lstLog.HideSelection = false;
-            this.lstLog.Location = new System.Drawing.Point(12, 58);
-            this.lstLog.Name = "lstLog";
-            this.lstLog.Size = new System.Drawing.Size(619, 485);
-            this.lstLog.SmallImageList = this.imgIcons;
-            this.lstLog.TabIndex = 15;
-            this.lstLog.UseCompatibleStateImageBehavior = false;
-            this.lstLog.View = System.Windows.Forms.View.Details;
-            // 
-            // colType
-            // 
-            this.colType.Text = "";
-            this.colType.Width = 275;
-            // 
-            // colDelta
-            // 
-            this.colDelta.Text = "Change in hours";
-            this.colDelta.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.colDelta.Width = 105;
-            // 
-            // colBalanceHours
-            // 
-            this.colBalanceHours.Text = "Balance in hours";
-            this.colBalanceHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.colBalanceHours.Width = 105;
-            // 
-            // colBalanceDays
-            // 
-            this.colBalanceDays.Text = "Balance in work days";
-            this.colBalanceDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.colBalanceDays.Width = 130;
-            // 
-            // lstVacation
-            // 
-            this.lstVacation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lstVacation.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.colDate,
-            this.colPercentage,
-            this.colTime});
-            this.lstVacation.FullRowSelect = true;
-            this.lstVacation.GridLines = true;
-            this.lstVacation.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lstVacation.HideSelection = false;
-            this.lstVacation.Location = new System.Drawing.Point(637, 58);
-            this.lstVacation.Name = "lstVacation";
-            this.lstVacation.Size = new System.Drawing.Size(297, 485);
-            this.lstVacation.TabIndex = 17;
-            this.lstVacation.UseCompatibleStateImageBehavior = false;
-            this.lstVacation.View = System.Windows.Forms.View.Details;
-            // 
-            // colDate
-            // 
-            this.colDate.Text = "Date";
-            this.colDate.Width = 158;
-            // 
-            // colPercentage
-            // 
-            this.colPercentage.Text = "% day";
-            this.colPercentage.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.colPercentage.Width = 45;
-            // 
-            // colTime
-            // 
-            this.colTime.Text = "Time in hours";
-            this.colTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.colTime.Width = 90;
+            this.imgIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgIcons.ImageStream")));
+            this.imgIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.imgIcons.Images.SetKeyName(0, "money_dollar.png");
+            this.imgIcons.Images.SetKeyName(1, "cocktail.ico");
+            this.imgIcons.Images.SetKeyName(2, "Negative_16x16.png");
             // 
             // btnAdd
             // 
@@ -343,24 +276,121 @@
             this.dlgOpen.Filter = "XML Files (*.xml)|*.xml|All files (*.*)|*.*";
             this.dlgOpen.Title = "Open vacation data...";
             // 
-            // imgIcons
+            // pnlCenterContent
             // 
-            this.imgIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgIcons.ImageStream")));
-            this.imgIcons.TransparentColor = System.Drawing.Color.Transparent;
-            this.imgIcons.Images.SetKeyName(0, "money_dollar.png");
-            this.imgIcons.Images.SetKeyName(1, "cocktail.ico");
-            this.imgIcons.Images.SetKeyName(2, "Negative_16x16.png");
+            this.pnlCenterContent.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlCenterContent.Controls.Add(this.splitLists);
+            this.pnlCenterContent.Location = new System.Drawing.Point(0, 58);
+            this.pnlCenterContent.Name = "pnlCenterContent";
+            this.pnlCenterContent.Size = new System.Drawing.Size(944, 487);
+            this.pnlCenterContent.TabIndex = 23;
+            // 
+            // splitLists
+            // 
+            this.splitLists.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitLists.Location = new System.Drawing.Point(0, 0);
+            this.splitLists.Name = "splitLists";
+            // 
+            // splitLists.Panel1
+            // 
+            this.splitLists.Panel1.Controls.Add(this.lstLog);
+            // 
+            // splitLists.Panel2
+            // 
+            this.splitLists.Panel2.Controls.Add(this.lstVacation);
+            this.splitLists.Size = new System.Drawing.Size(944, 487);
+            this.splitLists.SplitterDistance = 631;
+            this.splitLists.TabIndex = 0;
+            this.splitLists.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitLists_SplitterMoved);
+            // 
+            // lstLog
+            // 
+            this.lstLog.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colType,
+            this.colDelta,
+            this.colBalanceHours,
+            this.colBalanceDays});
+            this.lstLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstLog.FullRowSelect = true;
+            this.lstLog.GridLines = true;
+            this.lstLog.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lstLog.HideSelection = false;
+            this.lstLog.Location = new System.Drawing.Point(0, 0);
+            this.lstLog.Name = "lstLog";
+            this.lstLog.Size = new System.Drawing.Size(631, 487);
+            this.lstLog.TabIndex = 19;
+            this.lstLog.UseCompatibleStateImageBehavior = false;
+            this.lstLog.View = System.Windows.Forms.View.Details;
+            // 
+            // colType
+            // 
+            this.colType.Text = "";
+            this.colType.Width = 275;
+            // 
+            // colDelta
+            // 
+            this.colDelta.Text = "Change in hours";
+            this.colDelta.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.colDelta.Width = 105;
+            // 
+            // colBalanceHours
+            // 
+            this.colBalanceHours.Text = "Balance in hours";
+            this.colBalanceHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.colBalanceHours.Width = 105;
+            // 
+            // colBalanceDays
+            // 
+            this.colBalanceDays.Text = "Balance in work days";
+            this.colBalanceDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.colBalanceDays.Width = 130;
+            // 
+            // lstVacation
+            // 
+            this.lstVacation.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colDate,
+            this.colPercentage,
+            this.colTime});
+            this.lstVacation.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstVacation.FullRowSelect = true;
+            this.lstVacation.GridLines = true;
+            this.lstVacation.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lstVacation.HideSelection = false;
+            this.lstVacation.Location = new System.Drawing.Point(0, 0);
+            this.lstVacation.Name = "lstVacation";
+            this.lstVacation.Size = new System.Drawing.Size(309, 487);
+            this.lstVacation.TabIndex = 20;
+            this.lstVacation.UseCompatibleStateImageBehavior = false;
+            this.lstVacation.View = System.Windows.Forms.View.Details;
+            // 
+            // colDate
+            // 
+            this.colDate.Text = "Date";
+            this.colDate.Width = 158;
+            // 
+            // colPercentage
+            // 
+            this.colPercentage.Text = "% day";
+            this.colPercentage.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.colPercentage.Width = 45;
+            // 
+            // colTime
+            // 
+            this.colTime.Text = "Time in hours";
+            this.colTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.colTime.Width = 90;
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(944, 582);
+            this.Controls.Add(this.pnlCenterContent);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnRemove);
             this.Controls.Add(this.btnAdd);
-            this.Controls.Add(this.lstVacation);
-            this.Controls.Add(this.lstLog);
             this.Controls.Add(this.lblCurrBalance);
             this.Controls.Add(this.lblFuturePayPeriod);
             this.Controls.Add(this.lblCurrPayPeriod);
@@ -383,6 +413,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.mnuMain.ResumeLayout(false);
             this.mnuMain.PerformLayout();
+            this.pnlCenterContent.ResumeLayout(false);
+            this.splitLists.Panel1.ResumeLayout(false);
+            this.splitLists.Panel2.ResumeLayout(false);
+            this.splitLists.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -400,18 +434,9 @@
         private System.Windows.Forms.Label lblFuture;
         private System.Windows.Forms.Label lblFuturePayPeriod;
         private System.Windows.Forms.Label lblCurrBalance;
-        private System.Windows.Forms.ListView lstLog;
-        private System.Windows.Forms.ColumnHeader colType;
-        private System.Windows.Forms.ColumnHeader colBalanceHours;
-        private System.Windows.Forms.ColumnHeader colBalanceDays;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.Button btnAdd;
-        private System.Windows.Forms.ListView lstVacation;
-        private System.Windows.Forms.ColumnHeader colDate;
-        private System.Windows.Forms.ColumnHeader colPercentage;
-        private System.Windows.Forms.ColumnHeader colTime;
-        private System.Windows.Forms.ColumnHeader colDelta;
         private System.Windows.Forms.SaveFileDialog dlgSave;
         private System.Windows.Forms.MenuStrip mnuMain;
         private System.Windows.Forms.ToolStripMenuItem mnuFile;
@@ -423,6 +448,17 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem mnuFileExit;
         private System.Windows.Forms.ImageList imgIcons;
+        private System.Windows.Forms.Panel pnlCenterContent;
+        private System.Windows.Forms.SplitContainer splitLists;
+        private System.Windows.Forms.ListView lstLog;
+        private System.Windows.Forms.ColumnHeader colType;
+        private System.Windows.Forms.ColumnHeader colDelta;
+        private System.Windows.Forms.ColumnHeader colBalanceHours;
+        private System.Windows.Forms.ColumnHeader colBalanceDays;
+        private System.Windows.Forms.ListView lstVacation;
+        private System.Windows.Forms.ColumnHeader colDate;
+        private System.Windows.Forms.ColumnHeader colPercentage;
+        private System.Windows.Forms.ColumnHeader colTime;
     }
 }
 
