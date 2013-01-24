@@ -366,9 +366,18 @@ namespace Fogcation
                     AddOpeningLogEntry(currBalance.Value);
 
                     var dictVacation = new Dictionary<DateTime, VacationDay>();
+                    var dictAnnualVacation = new Dictionary<int, TimeSpan>();
+
                     foreach (ListViewItem item in lstVacation.Items)
                     {
                         var day = item.Tag as VacationDay;
+                        
+                        if (!dictAnnualVacation.ContainsKey(day.Dt.Year)) {
+                            dictAnnualVacation[day.Dt.Year] = new TimeSpan(0);
+                        }
+
+                        dictAnnualVacation[day.Dt.Year] = dictAnnualVacation[day.Dt.Year].Add(day.Hours.Negate());
+
                         if (day.Dt >= dtCurr.Value.Date && day.Dt <= dtFuture.Value.Date)
                         {
                             dictVacation.Add(day.Dt.Date, day);
@@ -388,7 +397,7 @@ namespace Fogcation
                     {
                         if (dt.Year != nYearLast)
                         {
-                            SetYearMin(dt.Year - 1, minBalanceForYear);
+                            SetYearSummaries(dt.Year - 1, minBalanceForYear, dictAnnualVacation.ContainsKey(dt.Year - 1) ? dictAnnualVacation[dt.Year - 1] : new TimeSpan(0));
                         }
 
                         if (dictVacation.ContainsKey(dt.Date))
@@ -416,7 +425,7 @@ namespace Fogcation
                         nYearLast = dt.Year;
                     }
                     AddClosingLogEntry(cPayPeriods, futureBalance);
-                    SetYearMin(dtEnd.Year, minBalanceForYear);
+                    SetYearSummaries(dtEnd.Year, minBalanceForYear, dictAnnualVacation.ContainsKey(dtEnd.Year) ? dictAnnualVacation[dtEnd.Year] : new TimeSpan(0));
                 }
                 else
                 {
@@ -427,10 +436,13 @@ namespace Fogcation
             lstLog.ResumeLayout();
         }
 
-        private void SetYearMin(int year, TimeSpan minBalanceForYear)
+        private void SetYearSummaries(int year, TimeSpan minBalanceForYear, TimeSpan totalVacationForYear)
         {
-            var group = GetListViewGroup(lstLog, year.ToString());
-            group.Header = String.Format("{0}: lowest balance of {1}", year.ToString(), PrettyPrintTimeSpan(minBalanceForYear, true));
+            var logGroup = GetListViewGroup(lstLog, year.ToString());
+            logGroup.Header = String.Format("{0}: lowest balance of {1}", year.ToString(), PrettyPrintTimeSpan(minBalanceForYear, true));
+
+            var vacationGroup = GetListViewGroup(lstVacation, year.ToString());
+            vacationGroup.Header = String.Format("{0}: total vacation of {1}", year.ToString(), PrettyPrintTimeSpan(totalVacationForYear, true));
         }
 
         private void ResetCalculatedFields()
