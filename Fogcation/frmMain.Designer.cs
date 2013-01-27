@@ -320,6 +320,7 @@
             this.lstLog.Location = new System.Drawing.Point(0, 0);
             this.lstLog.Name = "lstLog";
             this.lstLog.Size = new System.Drawing.Size(631, 487);
+            this.lstLog.SmallImageList = this.imgIcons;
             this.lstLog.TabIndex = 19;
             this.lstLog.UseCompatibleStateImageBehavior = false;
             this.lstLog.View = System.Windows.Forms.View.Details;
