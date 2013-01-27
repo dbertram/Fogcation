@@ -26,10 +26,11 @@ namespace Fogcation
         // the default long-form date format
         internal static string sLongDateFormat = "MMMM d, yyyy";
         // the current file format version
-        internal static Version fileFormat = new Version(1, 0);
+        internal static Version fileFormat = new Version(1, 1);
 
         // the amount of vacation time accrued per pay period
         private static TimeSpan tsVacationTimePerPayPeriod = new TimeSpan(6, 40, 0);
+        private static TimeSpan tsBoostedTimePerPayPeriod = new TimeSpan(8, 20, 0);
         private dlgVacationDay dlgVacationDay = new dlgVacationDay();
 
         private VacationData data = new VacationData();
@@ -168,6 +169,11 @@ namespace Fogcation
                         throw new InvalidDataException(String.Format("The specified file is file format version {0}. This applicatioin can only open file format version {1} and earlier", data.FileFormat, fileFormat));
                     }
 
+                    if (data.FileFormat < fileFormat && !VacationData.Migrate(data))
+                    {
+                        throw new DataException(String.Format("Failed to upgrade the specified file from file format version {0} to {1}.", data.FileFormat, fileFormat));
+                    }
+
                     fSuccessfulLoad = true;
                 }
                 catch (Exception ex)
@@ -179,13 +185,14 @@ namespace Fogcation
             if (!fSuccessfulLoad)
             {
                 data = new VacationData();
-                data.StartDate = data.TargetDate = DateTime.Now.Date;
+                data.StartDate = data.TargetDate = data.BoostDate = DateTime.Now.Date;
             }
 
             dlgVacationDay.dt.Value = data.TargetDate.Date;
 
             data.fLoading = true;
             dtCurr.Value = data.StartDate.Date;
+            dtBoostStart.Value = data.BoostDate.Date;
             txtCurrBalance.Text = String.Format("{0}:{1}", (int)data.StartBalance.TotalHours, Math.Abs(data.StartBalance.Minutes));
             lstVacation.Items.Clear();
             foreach (var day in data.VacationDays)
@@ -232,6 +239,15 @@ namespace Fogcation
             if (!data.fLoading)
             {
                 data.StartDate = dtCurr.Value.Date;
+                data.fDirty = true;
+                CalculateBalance();
+            }
+        }
+
+        private void dtBoostStart_ValueChanged(object sender, EventArgs e)
+        {
+            if (!data.fLoading) {
+                data.BoostDate = dtBoostStart.Value.Date;
                 data.fDirty = true;
                 CalculateBalance();
             }
@@ -389,6 +405,7 @@ namespace Fogcation
                     int cPayPeriods = 0;
                     DateTime dt = new DateTime(dtCurr.Value.Year, dtCurr.Value.Month, dtCurr.Value.Day, 12, 0, 0);
                     DateTime dtEnd = new DateTime(dtFuture.Value.Year, dtFuture.Value.Month, dtFuture.Value.Day, 14, 0, 0);
+                    DateTime dtBoost = new DateTime(dtBoostStart.Value.Year, dtBoostStart.Value.Month, dtBoostStart.Value.Day, 10, 0, 0);
 
                     var minBalanceForYear = futureBalance;
                     var nYearLast = dt.Year;
@@ -413,9 +430,10 @@ namespace Fogcation
 
                         if (dt.Day == 15 || dt.Day == DateTime.DaysInMonth(dt.Year, dt.Month))
                         {
-                            futureBalance += tsVacationTimePerPayPeriod;
+                            var accrual = dt < dtBoost ? tsVacationTimePerPayPeriod : tsBoostedTimePerPayPeriod;
+                            futureBalance += accrual;
                             cPayPeriods++;
-                            AddPayPeriodLogEntry(dt, futureBalance);
+                            AddPayPeriodLogEntry(dt, accrual, futureBalance);
                         }
 
                         if (dt.Year != nYearLast)
@@ -613,16 +631,16 @@ namespace Fogcation
             );
         }
 
-        private void AddPayPeriodLogEntry(DateTime dt, TimeSpan balance)
+        private void AddPayPeriodLogEntry(DateTime dt, TimeSpan accrual, TimeSpan balance)
         {
             AddLogEntry(
                 String.Format(
                     "{0} payday!",
                     dt.ToString(sLongDateFormat),
-                    tsVacationTimePerPayPeriod.Hours,
-                    tsVacationTimePerPayPeriod.Minutes
+                    accrual.Hours,
+                    accrual.Minutes
                 ),
-                tsVacationTimePerPayPeriod,
+                accrual,
                 balance,
                 dt.Year,
                 LogEntryType.PayPeriod

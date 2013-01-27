@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -28,6 +29,7 @@ namespace Fogcation
         }
 
         public DateTime StartDate;
+        public DateTime BoostDate;
 
         [XmlIgnore]
         public TimeSpan StartBalance;
@@ -42,5 +44,25 @@ namespace Fogcation
 
         public List<VacationDay> VacationDays = new List<VacationDay>();
         public DateTime TargetDate;
+
+        public static bool Migrate(VacationData data) {
+            var migrationSummary = new List<string>();
+            migrationSummary.Add(String.Format("Upgrading from file format {0}:\n", data.FileFormat));
+
+            switch (data.FileFormat.ToString())
+            {
+                case "1.0":
+                    data.BoostDate = new DateTime(Math.Max(data.StartDate.AddYears(3).Ticks, new DateTime(2013, 1, 1).Ticks));
+                    migrationSummary.Add(String.Format("Vacation boost start date set to {0}.", data.BoostDate.ToString(frmMain.sLongDateFormat)));
+                    break;
+            }
+
+            data.FileFormat = frmMain.fileFormat;
+            data.fDirty = true;
+
+            MessageBox.Show(String.Join("\n", migrationSummary.ToArray()), "Upgrade successful!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            return true;
+        }
     }
 }
