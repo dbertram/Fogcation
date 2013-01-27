@@ -163,6 +163,7 @@ namespace Fogcation
                     FileStream ReadFileStream = new FileStream(sFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
                     data = serializer.Deserialize(ReadFileStream) as VacationData;
                     ReadFileStream.Close();
+                    data.sFileName = sFileName;
 
                     if (data.FileFormat > fileFormat)
                     {
