@@ -146,6 +146,7 @@ namespace Fogcation
                 serializer.Serialize(WriteFileStream, data);
                 WriteFileStream.Close();
                 data.fDirty = false;
+                UpdateWindowTitle();
                 return true;
             }
 
@@ -189,8 +190,6 @@ namespace Fogcation
                 data.StartDate = data.TargetDate = data.BoostDate = DateTime.Now.Date;
             }
 
-            UpdateWindowTitle();
-
             dlgVacationDay.dt.Value = data.TargetDate.Date;
 
             data.fLoading = true;
@@ -211,7 +210,11 @@ namespace Fogcation
 
         private void UpdateWindowTitle()
         {
-            this.Text = String.Format("Fog Creek Vacation Calculator - {0}", String.IsNullOrEmpty(data.sFileName) ? "Untitled" : Path.GetFullPath(data.sFileName));
+            this.Text = String.Format(
+                "{0}{1} - Fog Creek Vacation Calculator",
+                String.IsNullOrEmpty(data.sFileName) ? "Untitled" : Path.GetFullPath(data.sFileName),
+                data.fDirty ? "*" : ""
+            );
         }
 
         private void dtFuture_ValueChanged(object sender, EventArgs e)
@@ -377,6 +380,7 @@ namespace Fogcation
 
         private void CalculateBalance()
         {
+            UpdateWindowTitle();
             ResetCalculatedFields();
             lstLog.SuspendLayout();
             if (ValidateDateRange())
