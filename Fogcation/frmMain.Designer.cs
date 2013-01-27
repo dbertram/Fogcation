@@ -65,6 +65,8 @@
             this.colDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colPercentage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.dtBoostStart = new System.Windows.Forms.DateTimePicker();
+            this.lblMoarVacay = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.mnuMain.SuspendLayout();
             this.pnlCenterContent.SuspendLayout();
@@ -282,9 +284,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlCenterContent.Controls.Add(this.splitLists);
-            this.pnlCenterContent.Location = new System.Drawing.Point(0, 58);
+            this.pnlCenterContent.Location = new System.Drawing.Point(0, 88);
             this.pnlCenterContent.Name = "pnlCenterContent";
-            this.pnlCenterContent.Size = new System.Drawing.Size(944, 487);
+            this.pnlCenterContent.Size = new System.Drawing.Size(944, 457);
             this.pnlCenterContent.TabIndex = 23;
             // 
             // splitLists
@@ -300,7 +302,7 @@
             // splitLists.Panel2
             // 
             this.splitLists.Panel2.Controls.Add(this.lstVacation);
-            this.splitLists.Size = new System.Drawing.Size(944, 487);
+            this.splitLists.Size = new System.Drawing.Size(944, 457);
             this.splitLists.SplitterDistance = 631;
             this.splitLists.TabIndex = 0;
             this.splitLists.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitLists_SplitterMoved);
@@ -319,7 +321,7 @@
             this.lstLog.HideSelection = false;
             this.lstLog.Location = new System.Drawing.Point(0, 0);
             this.lstLog.Name = "lstLog";
-            this.lstLog.Size = new System.Drawing.Size(631, 487);
+            this.lstLog.Size = new System.Drawing.Size(631, 457);
             this.lstLog.SmallImageList = this.imgIcons;
             this.lstLog.TabIndex = 19;
             this.lstLog.UseCompatibleStateImageBehavior = false;
@@ -361,7 +363,7 @@
             this.lstVacation.HideSelection = false;
             this.lstVacation.Location = new System.Drawing.Point(0, 0);
             this.lstVacation.Name = "lstVacation";
-            this.lstVacation.Size = new System.Drawing.Size(309, 487);
+            this.lstVacation.Size = new System.Drawing.Size(309, 457);
             this.lstVacation.TabIndex = 20;
             this.lstVacation.UseCompatibleStateImageBehavior = false;
             this.lstVacation.View = System.Windows.Forms.View.Details;
@@ -383,11 +385,31 @@
             this.colTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.colTime.Width = 90;
             // 
+            // dtBoostStart
+            // 
+            this.dtBoostStart.CustomFormat = "";
+            this.dtBoostStart.Location = new System.Drawing.Point(151, 58);
+            this.dtBoostStart.Name = "dtBoostStart";
+            this.dtBoostStart.Size = new System.Drawing.Size(200, 24);
+            this.dtBoostStart.TabIndex = 25;
+            this.dtBoostStart.ValueChanged += new System.EventHandler(this.dtBoostStart_ValueChanged);
+            // 
+            // lblMoarVacay
+            // 
+            this.lblMoarVacay.AutoSize = true;
+            this.lblMoarVacay.Location = new System.Drawing.Point(25, 61);
+            this.lblMoarVacay.Name = "lblMoarVacay";
+            this.lblMoarVacay.Size = new System.Drawing.Size(120, 17);
+            this.lblMoarVacay.TabIndex = 24;
+            this.lblMoarVacay.Text = "Vacation boost as of";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(944, 582);
+            this.Controls.Add(this.dtBoostStart);
+            this.Controls.Add(this.lblMoarVacay);
             this.Controls.Add(this.pnlCenterContent);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnRemove);
@@ -460,6 +482,8 @@
         private System.Windows.Forms.ColumnHeader colDate;
         private System.Windows.Forms.ColumnHeader colPercentage;
         private System.Windows.Forms.ColumnHeader colTime;
+        private System.Windows.Forms.DateTimePicker dtBoostStart;
+        private System.Windows.Forms.Label lblMoarVacay;
     }
 }
 
