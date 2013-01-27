@@ -429,7 +429,7 @@
             this.MinimumSize = new System.Drawing.Size(960, 200);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Fogcation - Fog Creek Vacation Calculator";
+            this.Text = "Fog Creek Vacation Calculator";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.Shown += new System.EventHandler(this.Main_Shown);
             this.Resize += new System.EventHandler(this.Main_Resize);

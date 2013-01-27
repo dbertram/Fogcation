@@ -189,6 +189,8 @@ namespace Fogcation
                 data.StartDate = data.TargetDate = data.BoostDate = DateTime.Now.Date;
             }
 
+            UpdateWindowTitle();
+
             dlgVacationDay.dt.Value = data.TargetDate.Date;
 
             data.fLoading = true;
@@ -206,6 +208,11 @@ namespace Fogcation
         }
 
         #endregion
+
+        private void UpdateWindowTitle()
+        {
+            this.Text = String.Format("Fog Creek Vacation Calculator - {0}", String.IsNullOrEmpty(data.sFileName) ? "Untitled" : Path.GetFullPath(data.sFileName));
+        }
 
         private void dtFuture_ValueChanged(object sender, EventArgs e)
         {
